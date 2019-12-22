@@ -1,0 +1,43 @@
+
+/* CSS Transition */
+
+.item-enter {
+  opacity: 0;
+}
+.item-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+.item-exit {
+  opacity: 1;
+}
+.item-exit-active {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
+}
+
+
+.articleList-enter {
+  opacity: 0.01;
+}
+
+
+.articleList-enter.articleList-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.articleList-leave {
+  opacity: 1;
+}
+
+.articleList-leave.articleList-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+.text {
+  font:Roboto, Arial, sans-serif;
+  font-size: 14px;
+
+}
