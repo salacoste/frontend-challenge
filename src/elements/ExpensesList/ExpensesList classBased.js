@@ -1,59 +1,56 @@
 import React, {PureComponent, Fragment} from 'react'
 import {Card, Button, Alert, Table, ButtonDropdown, DropdownItem, DropdownToggle, DropdownMenu} from 'reactstrap'
-import {Container} from 'react-bootstrap'
-import TableCreator from'./Table'
+import {Accordion, Container} from 'react-bootstrap'
+import CommentList from '../commentsList/commentsList'
 
+import {
+  useTable,
+  useGroupBy,
+  useFilters,
+  useSortBy,
+  useExpanded,
+  usePagination } from 'react-table'
 
-// import {
-//   useTable,
-//   useGroupBy,
-//   useFilters,
-//   useSortBy,
-//   useExpanded,
-//   usePagination } from 'react-table'
-
-  // function createTable({columns, data}) {
-  //   const {
-  //     getTableProps,
-  //     getTableBodyProps,
-  //     headerGroups,
-  //     rows,
-  //     prepareRow,
-  //   } = useTable({
-  //     columns,
-  //     data,
-  //   })
-  //   return (
-  //   <Table style={{fontSize: '12px'}} dark hover responsive bordered size={this.state.size} {...getTableProps()}>
-  //       <thead>
-  //       {headerGroups.map(headerGroup => (
-  //         <tr {...headerGroup.getHeaderGroupProps()}>
-  //           {headerGroup.headers.map(column => (
-  //             <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-  //           ))}
-  //         </tr>
-  //       ))}
-  //       </thead>
-  //       <tbody {...getTableBodyProps()}>
-  //         {rows.map(
-  //           (row, i) => {
-  //             prepareRow(row);
-  //             return (
-  //               <tr {...row.getRowProps()}>
-  //                 {row.cells.map(cell => {
-  //                   return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-  //                 })}
-  //               </tr>
-  //             )}
-  //         )}
-  //       </tbody>   
+  function createTable({columns, data}) {
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      rows,
+      prepareRow,
+    } = useTable({
+      columns,
+      data,
+    })
+    return (
+    <Table style={{fontSize: '12px'}} dark hover responsive bordered size={this.state.size} {...getTableProps()}>
+        <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+            ))}
+          </tr>
+        ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(
+            (row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  })}
+                </tr>
+              )}
+          )}
+        </tbody>   
     
-  //   </Table>
-  //   )
-  // }
+    </Table>
+    )
+  }
 
-
-// Original Class component is below.
 
 class ExpensesList extends PureComponent {
   
@@ -212,14 +209,15 @@ class ExpensesList extends PureComponent {
       </ButtonDropdown>
       </Container>
 
-      <TableCreator expenses={this.props.expenses} pagination/>
       {/* <Table style={{fontSize: '12px'}} dark hover responsive bordered size={this.state.size}>
         {this.getHeader()}
         {this.getList()}
 
       </Table> */}
 
-    
+    {createTable(
+      this.columns, this.props.expenses
+      )}
     </Fragment>
       )
     }

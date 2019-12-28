@@ -4,7 +4,7 @@ import ExpensesList from '../../elements/ExpensesList/ExpensesList'
 import {Container, Row, Col} from 'reactstrap'
 import PropTypes from 'prop-types'
 //import {CSSTransition, TransitionGroup} from 'react-transition-group'
-import {CSSTransition} from 'react-addons-css-transition-group'
+// import {CSSTransition} from 'react-addons-css-transition-group'
 import './styles.css'
 
 class MainPage extends PureComponent {

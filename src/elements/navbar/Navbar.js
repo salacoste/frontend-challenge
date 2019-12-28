@@ -12,18 +12,12 @@ class NavBarElement extends PureComponent {
   render() {
     return <Fragment>
               <Navbar bg="dark" expand="sm" variant="dark" collapseOnSelect>
-                      <Navbar.Brand>Article Main Page</Navbar.Brand>
+                      <Navbar.Brand>Expense report page</Navbar.Brand>
                       <Navbar.Toggle aria-controls="basic-navbar-nav" />
                       <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
                           <LinkContainer exact to='/'>
                             <Nav.Link>Home</Nav.Link>
-                          </LinkContainer>
-                          <LinkContainer exact to='/daypicker'>
-                            <Nav.Link>DayPicker</Nav.Link>
-                          </LinkContainer>
-                          <LinkContainer to='/allcomments'>
-                            <Nav.Link>All Comments</Nav.Link>
                           </LinkContainer>
                         </Nav>
                       </Navbar.Collapse>

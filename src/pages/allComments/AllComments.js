@@ -3,7 +3,6 @@ import ArticleList from '../../elements/articleList/articleList'
 import {Container, Row, Col, Pagination, Button, ButtonGroup} from 'react-bootstrap'
 import PropTypes from 'prop-types'
 //import {CSSTransition, TransitionGroup} from 'react-transition-group'
-import CSSTransition from 'react-addons-css-transition-group'
 import {Link, Redirect} from 'react-router-dom'
 import {LinkContainer} from 'react-router-bootstrap'
 
@@ -116,16 +115,16 @@ class AllComments extends PureComponent {
           </Row>
           <Row> 
             <Col>
-            <CSSTransition transitionName="articleList" 
+            {/* <CSSTransition transitionName="articleList" 
               transitionEnterTimeout={500}
               transitionLeaveTimeout={300}
-            >
+            > */}
               {/* <ArticleList articles = {this.props.articles} comments = {this.props.comments} loadArticles = {this.props.loadArticles} loadComments={this.props.loadComments} /> */}
               <p>Lorem, ipsum dolor.</p>
               <ul>
                 {this.getComments()}
               </ul>
-            </CSSTransition>
+            {/* </CSSTransition> */}
             </Col>
           </Row>
           <Row>
