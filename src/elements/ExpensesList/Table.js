@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import {useTable, useSortBy, usePagination} from 'react-table'
-import {Table as TableR, Pagination, PaginationItem, PaginationLink, Tooltip} from 'reactstrap'
+import {Table as TableR, Pagination, PaginationItem, PaginationLink, FormGroup, Label, Input, Col} from 'reactstrap'
 import {FaQuestionCircle} from 'react-icons/fa'
 
 
@@ -29,36 +29,47 @@ function Table ({columns, data, pagination}) {
           {
         columns,
         data,
-        initialState: { pageIndex: 1 },
+        initialState: { pageIndex: 0 },
       },
       useSortBy,
       usePagination
       )
 
         return (
-            <div>
+            <Fragment>
+                <FormGroup row className="text-right">
+                    <Label for="pageSize" sm={2}>Records per page: </Label>
+                    <Col sm={1}>
+                        <Input type="select" name="pageSize" id="pageSize" onChange={(e)=>{console.log('0000', e); setPageSize(Number(e.target.value))}} value={pageSize}  >
+                        {[5,10,20,30].map((val)=>{
+                            return (<option key={val} value={val}>{val}</option>)
+                        })}
+                        </Input>
+                    </Col>
+                </FormGroup>
                 <TableR style={{fontSize: '12px'}} dark hover responsive bordered size='lg' {...getTableProps()}>
                     <thead>
-                        {console.log('123', ...headerGroups[0].getHeaderGroupProps())}
                         {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
-                            <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                {column.render('Header')}
-                                <span style={{marginLeft:'5px'}}>
-                                    {column.isSorted
+                            <th {...column.getHeaderProps(column.Header !== 'Actions' ? column.getSortByToggleProps() : '')} style={{lineHeight:'40px'}}>
+                               <span style={{display:'inline-block', minHeight:'40px'}}>{column.render('Header')}</span>
+                                    {console.log('222211112', column)}
+                                    {column.Header !== "Actions" && column.isSorted
                                     ? column.isSortedDesc
-                                        ? ' 🔽'
-                                        : ' 🔼'
-                                    : <FaQuestionCircle/>}
-                                </span>
+                                        ?  <span style={{marginLeft:'10px', fontSize:'18px', display:'inline-block', position:'absolute'}}> 🔽</span>
+                                        :  <span style={{marginLeft:'10px', fontSize:'18px', display:'inline-block', position:'absolute'}}> 🔼</span>
+                            : (<Fragment>{column.Header!=='Actions'? (<span style={{margin:'0 0 0 12px', fontSize:'14px', display:'inline-block', position:'absolute'}}><FaQuestionCircle/></span>) : ''}</Fragment>)
+                                    }
+                                <div style={{minHeight:'16px', width:'1px', height:'48px', verticalAlign:'middle', display:'inline-block'}}></div>
                                 </th>
                             ))}
                         </tr>
                         ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map(
+                        {/* {console.log('222222',rows)} */}
+                        {page.map(
                             (row, i) => {
                             prepareRow(row);
                             return (
@@ -70,10 +81,65 @@ function Table ({columns, data, pagination}) {
                             )}
                         )}
                     </tbody>   
-                
                 </TableR>
-            </div>
+                {paginationNav(
+                    {
+                    rows,
+                    prepareRow,
+                    page,
+                    canPreviousPage,
+                    canNextPage,
+                    pageOptions,
+                    pageCount,
+                    gotoPage,
+                    nextPage,
+                    previousPage,
+                    setPageSize,
+                    pageIndex, 
+                    pageSize
+                }
+                )}
+            </Fragment>
         )
+    }
+
+    function paginationNav({
+        rows,
+        prepareRow,
+        page,
+        canPreviousPage,
+        canNextPage,
+        pageOptions,
+        pageCount,
+        gotoPage,
+        nextPage,
+        previousPage,
+        setPageSize,
+        pageIndex,
+        pageSize}) {
+        let content = []
+
+        for (let i = 0; i * pageSize < rows.length; i++) {
+            content.push(
+                <PaginationItem>
+                    <PaginationLink href="#" onClick={(e) => {e.preventDefault(); gotoPage(i)}}>
+                    {i+1}
+                    </PaginationLink>
+                </PaginationItem>
+            )
+            
+        }
+        return (
+        <Pagination aria-label="Page navigation example" >
+            <PaginationItem disabled={!canPreviousPage}>
+                <PaginationLink first href="#" onClick={(e) => {e.preventDefault(); gotoPage(0)}} />
+            </PaginationItem>
+            {content}
+            <PaginationItem  disabled={!canNextPage}>
+                <PaginationLink last href="#" onClick={(e) => {e.preventDefault(); gotoPage(Math.floor(rows.length/pageSize))}}/>
+            </PaginationItem>
+        </Pagination>
+    )
     }
 
     export default function createTable ({expenses}) {
@@ -108,23 +174,63 @@ function Table ({columns, data, pagination}) {
               accessor: 'merchant'
             },
             {
-              Header: 'User Name',
+              Header: 'Person Name',
               accessor: 'user.first',
               Cell: (props)=> {
                   const {user} = props.cell.row.original
-                  console.log('2!!2222', user, props)
                   return (
                       <Fragment>
                           {user ? <span>{user.first} {user.last}</span> : ''}
                       </Fragment>
                   )
               }
-            }
+            },
+            {
+                Header: 'Email',
+                accessor: 'user.email'
+            },
+            {
+                Header: 'Amount',
+                accessor: 'amount.currency',
+                Cell: (props) => {
+                    const {amount} = props.cell.row.original
+                    // console.log('2!!2222', amount, props)
+                    return (
+                        <Fragment>
+                            {amount ? <span>{amount.value} {amount.currency}</span>: ''}
+                        </Fragment>
+                    )
+                }
+            },
+            {
+                Header: 'Comment',
+                accessor: 'comment',
+                Cell: (props)=>{
+                    return (
+                        <Fragment>
+                            {props.value || 'Add a comment'}
+                        </Fragment>
+
+                    )
+                }
+            },
+            {
+                Header: 'Actions',
+                accessor: 'actions',
+                Cell: (props)=>{
+                    return (
+                        <Fragment>
+                            Action list
+                        </Fragment>
+
+                    )
+                }
+            },
             ], [])
         const data = React.useMemo(()=> expenses, [])
 
         return (
-                <Table columns={columns} data = {data} />
+                <Table columns={columns} data = {data} style={{marginBottom:'50px'}}/>
         )
     }
 
