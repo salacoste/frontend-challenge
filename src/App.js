@@ -38,27 +38,16 @@ export class App extends Component {
     if (!isLoaded) {
       return (
         <div className="container-fluid h-100 bg-dark">
-        <Row className="align-items-center h-100">
-        <Col className="text-center">
-        <Loader>
-          <p>
-          <span className="text-white" style={{"paddingLeft": "15px", "marginTop":"100px"}}>I'm doing the best that I can...</span>
-          </p>
-        </Loader>
-        </Col>
-        </Row>
+          <Row className="align-items-center h-100">
+            <Col className="text-center">
+              <Loader>
+                <p>
+                <span className="text-white" style={{"paddingLeft": "15px", "marginTop":"100px"}}>I'm doing the best that I can...</span>
+                </p>
+              </Loader>
+            </Col>
+          </Row>
         </div>
-       
-
-      // <div className="container-fluid h-100 bg-dark">
-      //   <Row className="align-items-center h-100">
-      //     <Col className="text-center">
-      //       <Spinner animation="border" role="status" className="text-white" />
-      //       <span className="text-white" style={{"paddingLeft": "15px"}}>I'm doing the best that I can...</span>
-      //     </Col>
-      //   </Row>
-      // </div>
-    
         )
     }
 

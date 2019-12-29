@@ -4,6 +4,8 @@ import { Switch, Route, withRouter } from 'react-router-dom'
 import MainPage from 'src/pages/main/MainPageContainer'
 import MainLayout from 'src/layouts/MainLayout'
 
+import ExpensePage from 'src/pages/expense/ExpensePage'
+
 // import DayPickerLayout from 'src/layouts/DayPickerLayout'
 // import DayPicker from 'src/pages/daypicker/DayPickerContainer'
 
@@ -29,6 +31,7 @@ export class Routes extends PureComponent {
     return (
       <Switch>
         <AppRoute exact path='/' layout={MainLayout} component={MainPage} />
+        <AppRoute exact path='/:id' layout={MainLayout} component={ExpensePage} />
         {/* <AppRoute exact path='/daypicker' layout={DayPickerLayout} component={DayPicker}/> */}
         {/* <AppRoute path='/allcomments/:id' layout={MainLayout} component={AllComments}/> */}
         {/* <AppRoute path='/allcomments/' layout={MainLayout} component={AllComments}/> */}

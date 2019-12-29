@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react'
-import {useTable, useSortBy, usePagination} from 'react-table'
-import {Table as TableR, Pagination, PaginationItem, PaginationLink, FormGroup, Label, Input, Col} from 'reactstrap'
+import React, { Fragment, useState } from 'react'
+import {useTable, useSortBy, usePagination, useFilters, useGlobalFilter} from 'react-table'
+import {Table as TableR, Pagination, PaginationItem, PaginationLink, FormGroup, Label, Input, Col, CustomInput} from 'reactstrap'
 import {FaQuestionCircle} from 'react-icons/fa'
 
 
@@ -8,6 +8,8 @@ import {FaQuestionCircle} from 'react-icons/fa'
 
 
 function Table ({columns, data, pagination}) {
+    const [darkMode, setMode] = useState(false);
+
     console.log('UseTable hook properties', useTable({columns, data}))
     const {
         getTableProps,
@@ -24,19 +26,32 @@ function Table ({columns, data, pagination}) {
         nextPage,
         previousPage,
         setPageSize,
-        state: { pageIndex, pageSize },
+        preGlobalFilteredRows,
+        setGlobalFilter,
+        state: { pageIndex, pageSize, ...state },
       } = useTable(
           {
         columns,
         data,
         initialState: { pageIndex: 0 },
       },
+      useFilters,
+      useGlobalFilter,
       useSortBy,
-      usePagination
-      )
+      usePagination,
 
+      )
+        console.log('123333', state)
+      
         return (
             <Fragment>
+                <Col className="text-center">
+                    <GlobalFilter
+                    preGlobalFilteredRows={preGlobalFilteredRows}
+                    globalFilter={state.globalFilter}
+                    setGlobalFilter={setGlobalFilter}
+                    />
+                </Col>
                 <FormGroup row className="text-right">
                     <Label for="pageSize" sm={2}>Records per page: </Label>
                     <Col sm={1}>
@@ -46,15 +61,19 @@ function Table ({columns, data, pagination}) {
                         })}
                         </Input>
                     </Col>
+                    <Col sm={8} className="text-right">
+                        <Label for="daynightswitch">Day/Night mode</Label>
+                        <CustomInput type="switch" id="daynightswitch" name="daynightswitch" style={{display:'inline-block'}} onChange={(e)=>{console.log(e); setMode(!darkMode)}}/>
+                    </Col>
                 </FormGroup>
-                <TableR style={{fontSize: '12px'}} dark hover responsive bordered size='lg' {...getTableProps()}>
+                <TableR style={{fontSize: '12px'}} dark={darkMode? true : false} hover responsive bordered size='lg' {...getTableProps()}>
                     <thead>
                         {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
                             <th {...column.getHeaderProps(column.Header !== 'Actions' ? column.getSortByToggleProps() : '')} style={{lineHeight:'40px'}}>
                                <span style={{display:'inline-block', minHeight:'40px'}}>{column.render('Header')}</span>
-                                    {console.log('222211112', column)}
+                                    {/* {console.log('222211112', column)} */}
                                     {column.Header !== "Actions" && column.isSorted
                                     ? column.isSortedDesc
                                         ?  <span style={{marginLeft:'10px', fontSize:'18px', display:'inline-block', position:'absolute'}}> 🔽</span>
@@ -103,6 +122,32 @@ function Table ({columns, data, pagination}) {
         )
     }
 
+    function GlobalFilter({
+        preGlobalFilteredRows,
+        globalFilter,
+        setGlobalFilter,
+      }) {
+        const count = preGlobalFilteredRows.length
+      
+        return (
+          <span>
+            Search:{' '}
+            <input
+              value={globalFilter || ''}
+              onChange={e => {
+                setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+              }}
+              placeholder={`Realtime search ...`}
+              style={{
+                fontSize: '.8rem',
+                border: '0',
+              }}
+            />
+          </span>
+        )
+      }
+      
+
     function paginationNav({
         rows,
         prepareRow,
@@ -121,7 +166,7 @@ function Table ({columns, data, pagination}) {
 
         for (let i = 0; i * pageSize < rows.length; i++) {
             content.push(
-                <PaginationItem>
+                <PaginationItem key={i}>
                     <PaginationLink href="#" onClick={(e) => {e.preventDefault(); gotoPage(i)}}>
                     {i+1}
                     </PaginationLink>
