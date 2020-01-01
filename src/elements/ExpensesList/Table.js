@@ -1,7 +1,8 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useParams, useContext } from 'react'
 import {useTable, useSortBy, usePagination, useFilters, useGlobalFilter} from 'react-table'
 import {Table as TableR, Pagination, PaginationItem, PaginationLink, FormGroup, Label, Input, Col, CustomInput} from 'reactstrap'
 import {FaQuestionCircle} from 'react-icons/fa'
+import {ThemeContext} from '../../context/Context'
 
 
 
@@ -187,12 +188,15 @@ function Table ({columns, data, pagination}) {
     )
     }
 
-    export default function createTable ({expenses}) {
+    export default function createTable ({expenses, ...props}) {
+        // const context = useContext(ThemeContext);
+        // // themes : {light, dark}
+        // // router: {properties of react-router} -> router.match.params.id -> ID
+
         const columns = React.useMemo(()=> [
             {
                 Header: '#',
                 accessor: 'index',
-                width: 50,
                 Cell:  (props) => { 
                     return (
                     <Fragment>
@@ -275,7 +279,9 @@ function Table ({columns, data, pagination}) {
         const data = React.useMemo(()=> expenses, [])
 
         return (
+            <Fragment>
                 <Table columns={columns} data = {data} style={{marginBottom:'50px'}}/>
+            </Fragment>
         )
     }
 

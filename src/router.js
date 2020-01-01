@@ -6,11 +6,6 @@ import MainLayout from 'src/layouts/MainLayout'
 
 import ExpensePage from 'src/pages/expense/ExpensePage'
 
-// import DayPickerLayout from 'src/layouts/DayPickerLayout'
-// import DayPicker from 'src/pages/daypicker/DayPickerContainer'
-
-import AllComments from 'src/pages/allComments/AllCommentsContainer'
-
 import NotFound from 'src/pages/404/404'
 import {Route as R} from 'react-router-dom'
 

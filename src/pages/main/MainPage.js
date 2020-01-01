@@ -1,15 +1,20 @@
-import React, { PureComponent, Fragment} from 'react'
+import React, { PureComponent, Fragment, useContext} from 'react'
 import ExpensesList from '../../elements/ExpensesList/ExpensesList'
 // import {Container, Row, Col} from 'react-bootstrap'
 import {Container, Row, Col} from 'reactstrap'
 import PropTypes from 'prop-types'
+import {ThemeContext, themes} from '../../context/Context'
+
 //import {CSSTransition, TransitionGroup} from 'react-transition-group'
 // import {CSSTransition} from 'react-addons-css-transition-group'
 import './styles.css'
 
 class MainPage extends PureComponent {
-  
+
+
   render () {
+    let router = this.props
+
     return (
       <Fragment>
         <Container fluid style={{marginTop:'20px'}}>
@@ -23,12 +28,9 @@ class MainPage extends PureComponent {
           </Row>
           <Row> 
             <Col>
-            {/* <CSSTransition transitionName="articleList" 
-              transitionEnterTimeout={500}
-              transitionLeaveTimeout={300}
-            > */}
+                <ThemeContext.Provider value={{themes, router}}>
                 <ExpensesList loadExpenses = {this.props.loadExpenses} expenses = {this.props.expenses}/>
-            {/* </CSSTransition> */}
+                </ThemeContext.Provider>
             </Col>
           </Row>
         </Container>
