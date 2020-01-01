@@ -3,13 +3,15 @@ import {useTable, useSortBy, usePagination, useFilters, useGlobalFilter} from 'r
 import {Table as TableR, Pagination, PaginationItem, PaginationLink, FormGroup, Label, Input, Col, CustomInput} from 'reactstrap'
 import {FaQuestionCircle} from 'react-icons/fa'
 import {ThemeContext} from '../../context/Context'
-
+import {Link, useHistory} from 'react-router-dom'
 
 
 
 
 function Table ({columns, data, pagination}) {
     const [darkMode, setMode] = useState(false);
+    const history = useHistory();
+
 
     console.log('UseTable hook properties', useTable({columns, data}))
     const {
@@ -42,8 +44,6 @@ function Table ({columns, data, pagination}) {
       usePagination,
 
       )
-        console.log('123333', state)
-      
         return (
             <Fragment>
                 <Col className="text-center">
@@ -74,7 +74,6 @@ function Table ({columns, data, pagination}) {
                             {headerGroup.headers.map(column => (
                             <th {...column.getHeaderProps(column.Header !== 'Actions' ? column.getSortByToggleProps() : '')} style={{lineHeight:'40px'}}>
                                <span style={{display:'inline-block', minHeight:'40px'}}>{column.render('Header')}</span>
-                                    {/* {console.log('222211112', column)} */}
                                     {column.Header !== "Actions" && column.isSorted
                                     ? column.isSortedDesc
                                         ?  <span style={{marginLeft:'10px', fontSize:'18px', display:'inline-block', position:'absolute'}}> 🔽</span>
@@ -88,15 +87,22 @@ function Table ({columns, data, pagination}) {
                         ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {/* {console.log('222222',rows)} */}
+                        {console.log('222222',rows)}
                         {page.map(
                             (row, i) => {
-                            prepareRow(row);
+                            console.log('88', row)
+                            prepareRow(row); 
+                            let onClick = () => {
+                                history.push(`/${row.original.id}`)
+                            }
                             return (
                                 <tr {...row.getRowProps()}>
-                                {row.cells.map(cell => {
-                                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                })}
+                                    {row.cells.map(cell => {
+                                        if (cell.column.Header !== 'Actions' && cell.column.Header !== 'Comment' ) {
+                                            return <td {...cell.getCellProps()}  onClick={onClick} className="pseudoLink" >{cell.render('Cell')}</td>
+                                        }
+                                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                    })}
                                 </tr>
                             )}
                         )}
