@@ -66,8 +66,7 @@ function Table ({columns, data, pagination}) {
                     </Col>
                     <Col sm={8} className="text-right">
                         <Label for="daynightswitch">Day/Night mode</Label>
-                        <CustomInput type="switch" id="daynightswitch" name="daynightswitch" style={{display:'inline-block'}} onChange={(e)=>{context.changeTheme(); console.log(context)}
-                            // (e)=>{console.log(e); setMode(!darkMode)}
+                        <CustomInput type="switch" id="daynightswitch" checked={context.activeTheme==='dark'? true : false} name="daynightswitch" style={{display:'inline-block'}} onChange={(e)=>{context.changeTheme(); console.log(context)}
                         }/>
                     </Col>
                 </FormGroup>
