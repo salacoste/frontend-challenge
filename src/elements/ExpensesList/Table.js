@@ -1,10 +1,10 @@
 import React, { Fragment, useState, useParams, useContext } from 'react'
 import {useTable, useSortBy, usePagination, useFilters, useGlobalFilter} from 'react-table'
 import {Table as TableR, Pagination, PaginationItem, PaginationLink, FormGroup, Label, Input, Col, CustomInput} from 'reactstrap'
-import {FaQuestionCircle} from 'react-icons/fa'
+import {FaQuestionCircle, } from 'react-icons/fa'
+import {FiMoreHorizontal} from 'react-icons/fi'
 import {ThemeContext} from '../../context/Context'
 import {Link, useHistory} from 'react-router-dom'
-
 
 
 
@@ -44,6 +44,8 @@ function Table ({columns, data, pagination}) {
       usePagination,
 
       )
+
+      let context = useContext(ThemeContext)
         return (
             <Fragment>
                 <Col className="text-center">
@@ -64,10 +66,12 @@ function Table ({columns, data, pagination}) {
                     </Col>
                     <Col sm={8} className="text-right">
                         <Label for="daynightswitch">Day/Night mode</Label>
-                        <CustomInput type="switch" id="daynightswitch" name="daynightswitch" style={{display:'inline-block'}} onChange={(e)=>{console.log(e); setMode(!darkMode)}}/>
+                        <CustomInput type="switch" id="daynightswitch" name="daynightswitch" style={{display:'inline-block'}} onChange={(e)=>{context.changeTheme(); console.log(context)}
+                            // (e)=>{console.log(e); setMode(!darkMode)}
+                        }/>
                     </Col>
                 </FormGroup>
-                <TableR style={{fontSize: '12px'}} dark={darkMode? true : false} hover responsive bordered size='lg' {...getTableProps()}>
+                <TableR style={{fontSize: '12px'}} dark={context.activeTheme === 'dark' ? true : false} hover responsive bordered size='lg' {...getTableProps()}>
                     <thead>
                         {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
@@ -90,7 +94,6 @@ function Table ({columns, data, pagination}) {
                         {console.log('222222',rows)}
                         {page.map(
                             (row, i) => {
-                            console.log('88', row)
                             prepareRow(row); 
                             let onClick = () => {
                                 history.push(`/${row.original.id}`)
@@ -129,166 +132,171 @@ function Table ({columns, data, pagination}) {
         )
     }
 
-    function GlobalFilter({
-        preGlobalFilteredRows,
-        globalFilter,
-        setGlobalFilter,
-      }) {
-        const count = preGlobalFilteredRows.length
-      
-        return (
-          <span>
-            Search:{' '}
-            <input
-              value={globalFilter || ''}
-              onChange={e => {
-                setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
-              }}
-              placeholder={`Realtime search ...`}
-              style={{
-                fontSize: '.8rem',
-                border: '0',
-              }}
-            />
-          </span>
-        )
-      }
-      
-
-    function paginationNav({
-        rows,
-        prepareRow,
-        page,
-        canPreviousPage,
-        canNextPage,
-        pageOptions,
-        pageCount,
-        gotoPage,
-        nextPage,
-        previousPage,
-        setPageSize,
-        pageIndex,
-        pageSize}) {
-        let content = []
-
-        for (let i = 0; i * pageSize < rows.length; i++) {
-            content.push(
-                <PaginationItem key={i}>
-                    <PaginationLink href="#" onClick={(e) => {e.preventDefault(); gotoPage(i)}}>
-                    {i+1}
-                    </PaginationLink>
-                </PaginationItem>
-            )
-            
-        }
-        return (
-        <Pagination aria-label="Page navigation example" >
-            <PaginationItem disabled={!canPreviousPage}>
-                <PaginationLink first href="#" onClick={(e) => {e.preventDefault(); gotoPage(0)}} />
-            </PaginationItem>
-            {content}
-            <PaginationItem  disabled={!canNextPage}>
-                <PaginationLink last href="#" onClick={(e) => {e.preventDefault(); gotoPage(Math.floor(rows.length/pageSize))}}/>
-            </PaginationItem>
-        </Pagination>
+function GlobalFilter({
+    preGlobalFilteredRows,
+    globalFilter,
+    setGlobalFilter,
+    }) {
+    const count = preGlobalFilteredRows.length
+    
+    return (
+        <span>
+        Search:{' '}
+        <input
+            value={globalFilter || ''}
+            onChange={e => {
+            setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+            }}
+            placeholder={`Realtime search ...`}
+            style={{
+            fontSize: '.8rem',
+            border: '0',
+            }}
+        />
+        </span>
     )
     }
+    
 
-    export default function createTable ({expenses, ...props}) {
-        // const context = useContext(ThemeContext);
-        // // themes : {light, dark}
-        // // router: {properties of react-router} -> router.match.params.id -> ID
+function paginationNav({
+    rows,
+    prepareRow,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    pageIndex,
+    pageSize}) {
+    let content = []
 
-        const columns = React.useMemo(()=> [
-            {
-                Header: '#',
-                accessor: 'index',
-                Cell:  (props) => { 
-                    return (
-                    <Fragment>
-                      {console.log(props)}
-                      {String(props.cell.value+1)}
-                    </Fragment>
-                    )
-                  }          
-            },
-            {
-              Header: 'Date',
-              
-              accessor: 'date',
-              Cell: (props)=> {
-                return (
-                  <Fragment>
-                      {(new Date(props.cell.value)).toLocaleString()}
-                  </Fragment>
-                )
-              }
-            },
-            {
-              Header: 'Merchant',
-              accessor: 'merchant'
-            },
-            {
-              Header: 'Person Name',
-              accessor: 'user.first',
-              Cell: (props)=> {
-                  const {user} = props.cell.row.original
-                  return (
-                      <Fragment>
-                          {user ? <span>{user.first} {user.last}</span> : ''}
-                      </Fragment>
-                  )
-              }
-            },
-            {
-                Header: 'Email',
-                accessor: 'user.email'
-            },
-            {
-                Header: 'Amount',
-                accessor: 'amount.currency',
-                Cell: (props) => {
-                    const {amount} = props.cell.row.original
-                    // console.log('2!!2222', amount, props)
-                    return (
-                        <Fragment>
-                            {amount ? <span>{amount.value} {amount.currency}</span>: ''}
-                        </Fragment>
-                    )
-                }
-            },
-            {
-                Header: 'Comment',
-                accessor: 'comment',
-                Cell: (props)=>{
-                    return (
-                        <Fragment>
-                            {props.value || 'Add a comment'}
-                        </Fragment>
-
-                    )
-                }
-            },
-            {
-                Header: 'Actions',
-                accessor: 'actions',
-                Cell: (props)=>{
-                    return (
-                        <Fragment>
-                            Action list
-                        </Fragment>
-
-                    )
-                }
-            },
-            ], [])
-        const data = React.useMemo(()=> expenses, [])
-
-        return (
-            <Fragment>
-                <Table columns={columns} data = {data} style={{marginBottom:'50px'}}/>
-            </Fragment>
+    for (let i = 0; i * pageSize < rows.length; i++) {
+        content.push(
+            <PaginationItem key={i}>
+                <PaginationLink href="#" onClick={(e) => {e.preventDefault(); gotoPage(i)}}>
+                {i+1}
+                </PaginationLink>
+            </PaginationItem>
         )
+        
     }
+    return (
+    <Pagination aria-label="Page navigation example" >
+        <PaginationItem disabled={!canPreviousPage}>
+            <PaginationLink first href="#" onClick={(e) => {e.preventDefault(); gotoPage(0)}} />
+        </PaginationItem>
+        {content}
+        <PaginationItem  disabled={!canNextPage}>
+            <PaginationLink last href="#" onClick={(e) => {e.preventDefault(); gotoPage(Math.floor(rows.length/pageSize))}}/>
+        </PaginationItem>
+    </Pagination>
+)
+}
+
+export default function createTable ({expenses, ...props}) {
+    // const context = useContext(ThemeContext);
+    // // themes : {light, dark}
+    // // router: {properties of react-router} -> router.match.params.id -> ID
+
+    const columns = React.useMemo(()=> [
+        {
+            Header: '#',
+            accessor: 'index',
+            Cell:  (props) => { 
+                return (
+                <Fragment>
+                    {console.log(props)}
+                    {String(props.cell.value+1)}
+                </Fragment>
+                )
+                }          
+        },
+        {
+            Header: 'Date',
+            
+            accessor: 'date',
+            Cell: (props)=> {
+            return (
+                <Fragment>
+                    {(new Date(props.cell.value)).toLocaleString()}
+                </Fragment>
+            )
+            }
+        },
+        {
+            Header: 'Merchant',
+            accessor: 'merchant'
+        },
+        {
+            Header: 'Person Name',
+            accessor: 'user.first',
+            Cell: (props)=> {
+                const {user} = props.cell.row.original
+                return (
+                    <Fragment>
+                        {user ? <span>{user.first} {user.last}</span> : ''}
+                    </Fragment>
+                )
+            }
+        },
+        {
+            Header: 'Email',
+            accessor: 'user.email'
+        },
+        {
+            Header: 'Amount',
+            accessor: 'amount.currency',
+            Cell: (props) => {
+                const {amount} = props.cell.row.original
+                // console.log('2!!2222', amount, props)
+                return (
+                    <Fragment>
+                        {amount ? <span>{amount.value} {amount.currency}</span>: ''}
+                    </Fragment>
+                )
+            }
+        },
+        {
+            Header: 'Comment',
+            accessor: 'comment',
+            Cell: (props)=>{
+                return (
+                    <Fragment>
+                        {props.value || 'Add a comment'}
+                    </Fragment>
+
+                )
+            }
+        },
+        {
+            Header: 'Actions',
+            accessor: 'actions',
+            Cell: (props)=>{
+                return (
+                    <Fragment>
+                        <a href="" className="actionButton" onClick={(e) => {
+                            console.log("click")
+                            e.preventDefault()
+                        }}>
+                        <FiMoreHorizontal />
+                        </a>
+                    </Fragment>
+
+                )
+            }
+        },
+        ], [])
+    const data = React.useMemo(()=> expenses, [])
+
+    return (
+        <Fragment>
+            <Table columns={columns} data = {data} style={{marginBottom:'50px'}}/>
+        </Fragment>
+    )
+}
 
 

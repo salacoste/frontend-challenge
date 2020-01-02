@@ -45,3 +45,33 @@
 .pseudoLink:hover {
   cursor:pointer;
 }
+
+.actionButton {
+  display:block;
+  padding:5px;
+  width: 30px;
+  text-align: center;
+  margin: 0 auto;
+  background-color: #b4c5f3a6;
+  transition: ease-in-out 0.2s;
+  border-radius: 2px;
+}
+.actionButton:hover {
+  background-color: #dae0f0a6;
+
+}
+
+.table-dark .actionButton {
+  background-color: #fff;
+}
+
+.table-dark .actionButton:hover {
+  background-color: rgb(195, 253, 255);
+}
+
+.table {
+  transition: ease-in-out .2s;
+}
+.navbar-dark {
+  transition: ease-in-out .2s;
+}
