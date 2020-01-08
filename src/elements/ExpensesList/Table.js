@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useParams, useContext } from 'react'
 import {useTable, useSortBy, usePagination, useFilters, useGlobalFilter} from 'react-table'
-import {Table as TableR, Pagination, PaginationItem, PaginationLink, FormGroup, Label, Input, Col, CustomInput, InputProps} from 'reactstrap'
+import {Table as TableR, Pagination, PaginationItem, PaginationLink, FormGroup, Label, Input, Col, CustomInput} from 'reactstrap'
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import {FaQuestionCircle, } from 'react-icons/fa'
 import {FiMoreHorizontal} from 'react-icons/fi'
 import {ThemeContext} from '../../context/Context'
@@ -296,15 +297,26 @@ export default function createTable ({expenses, ...props}) {
             Header: 'Actions',
             accessor: 'actions',
             Cell: (props)=>{
+                console.log('bbbb', props)
+                const [dropdownOpen, setDropdownOpen] = useState(false);
+                const toggle = () => setDropdownOpen(prevState => !prevState);
+
                 return (
                     <Fragment>
-                        <a href="" className="actionButton" onClick={(e) => {
-                            e.preventDefault()
-                            
-                            
-                        }}>
-                        <FiMoreHorizontal />
-                        </a>
+                        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+                            <DropdownToggle caret>
+                                <a href="" className="actionButton" onClick={(e) => {
+                                e.preventDefault()
+                                }}>
+                                </a>
+                                </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem header>Actions</DropdownItem>
+                                <DropdownItem  onClick={()=>{console.log('aaa')}}>Details</DropdownItem>
+                                <DropdownItem divider />
+                                <DropdownItem>Upload the photo of a receipt</DropdownItem>
+                            </DropdownMenu>
+                            </Dropdown>
                     </Fragment>
 
                 )
