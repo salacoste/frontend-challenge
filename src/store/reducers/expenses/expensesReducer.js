@@ -13,6 +13,7 @@ export const EXPENSES_LOADED = 'expenses/LOADED'
 export const EXPENSES_ERROR = 'expenses/ERROR'
 export const EXPENSES_FILTER = 'expenses/FILTER'
 export const NEW_EXPENSE_IMAGE_ID_ADDING = 'expenses/NEW_EXPENSE_IMAGE_ID_ADDING'
+export const EXPENSES_CHANGE_COMMENT = 'expenses/CHANGE_COMMENT'
 
 
 
@@ -32,6 +33,8 @@ export const expenses_loading = createAction(EXPENSES_LOADING)
 export const expenses_loaded = createAction(EXPENSES_LOADED)
 export const expenses_error = createAction(EXPENSES_ERROR)
 export const expenses_filter = createAction(EXPENSES_FILTER)
+export const expenses_change_comment = createAction(EXPENSES_CHANGE_COMMENT)
+
 export const expenses_new_image_id_adding = createAction(NEW_EXPENSE_IMAGE_ID_ADDING)
 
 
@@ -51,6 +54,23 @@ export const expenses_thunk = ()=> {
         dispatch(expenses_error(e))
       })
 
+  }
+}
+
+export const expenses_edit_comment_thunk = (id, comment)=> {
+  return (dispatch, getState) => {
+    console.log('updating the comment..', id, comment)
+    axios.post(`${url}/${id}`, {
+      comment: comment
+    })
+    .then((res)=> {
+      console.log('resolve', res)
+      dispatch(expenses_change_comment(res.data))
+    })
+    .catch((e)=> {
+      console.log('Error is occured', e)
+      dispatch(expenses_error(e))
+    })
   }
 }
 
@@ -106,6 +126,11 @@ const reducerMap = {
     },
     [NEW_EXPENSE_IMAGE_ID_ADDING]: (state, action) => {      
       return Immutable.setIn(state, ['entities', action.payload.articleId, 'comments'], [...state.entities[action.payload.articleId].comments, action.payload.id])
+    },
+    [EXPENSES_CHANGE_COMMENT] : (state, action) => {
+      console.log('change comment action', action)
+      return Immutable.setIn(state, ['entities', action.payload.id, 'comment'], action.payload.comment)
+      // return {...state}
     }
   }
 

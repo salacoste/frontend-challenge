@@ -1,10 +1,16 @@
 import React, { Fragment, useState, useParams, useContext } from 'react'
 import {useTable, useSortBy, usePagination, useFilters, useGlobalFilter} from 'react-table'
-import {Table as TableR, Pagination, PaginationItem, PaginationLink, FormGroup, Label, Input, Col, CustomInput} from 'reactstrap'
+import {Table as TableR, Pagination, PaginationItem, PaginationLink, FormGroup, Label, Input, Col, CustomInput, InputProps} from 'reactstrap'
 import {FaQuestionCircle, } from 'react-icons/fa'
 import {FiMoreHorizontal} from 'react-icons/fi'
 import {ThemeContext} from '../../context/Context'
 import {Link, useHistory} from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import {EXPENSES_CHANGE_COMMENT} from '../../store/reducers/expenses/expensesReducer'
+import { RIEToggle, RIEInput, RIETextArea, RIENumber, RIETags, RIESelect } from 'riek'
+import _ from 'lodash'
+
+import {expenses_edit_comment_thunk} from '../../store/reducers/expenses/expensesReducer'
 
 
 
@@ -201,6 +207,10 @@ export default function createTable ({expenses, ...props}) {
     // // themes : {light, dark}
     // // router: {properties of react-router} -> router.match.params.id -> ID
 
+
+    const dispatch = useDispatch()
+
+
     const columns = React.useMemo(()=> [
         {
             Header: '#',
@@ -262,10 +272,21 @@ export default function createTable ({expenses, ...props}) {
         {
             Header: 'Comment',
             accessor: 'comment',
+            
             Cell: (props)=>{
+                const id_data = props.cell.row.original.id
+                
                 return (
                     <Fragment>
-                        {props.value || 'Add a comment'}
+                        <RIEInput
+                            value={props.cell.value?  props.cell.value : 'Add a comment'}
+                            change={(task)=>{
+                                console.log(task)
+                                dispatch(expenses_edit_comment_thunk(id_data, task.comment))
+
+                            }}
+                            propName='comment'
+                            validate={_.isString} />
                     </Fragment>
 
                 )
@@ -278,8 +299,9 @@ export default function createTable ({expenses, ...props}) {
                 return (
                     <Fragment>
                         <a href="" className="actionButton" onClick={(e) => {
-                            console.log("click")
                             e.preventDefault()
+                            
+                            
                         }}>
                         <FiMoreHorizontal />
                         </a>
@@ -289,7 +311,7 @@ export default function createTable ({expenses, ...props}) {
             }
         },
         ], [])
-    const data = React.useMemo(()=> expenses, [])
+    const data = expenses
 
     return (
         <Fragment>
