@@ -13,6 +13,8 @@ import _ from 'lodash'
 
 import {expenses_edit_comment_thunk} from '../../store/reducers/expenses/expensesReducer'
 
+import ModalForm from '../../elements/ModalForm'
+
 
 
 function Table ({columns, data, pagination}) {
@@ -208,8 +210,12 @@ export default function createTable ({expenses, ...props}) {
     // // themes : {light, dark}
     // // router: {properties of react-router} -> router.match.params.id -> ID
 
-
+    const [modal, setModal] = useState(false);
+    const [expense_id, setExpenseId] = useState(null);
+    const [active_files, setActiveFiles] = useState(null);
     const dispatch = useDispatch()
+    const history = useHistory();
+
 
 
     const columns = React.useMemo(()=> [
@@ -219,7 +225,6 @@ export default function createTable ({expenses, ...props}) {
             Cell:  (props) => { 
                 return (
                 <Fragment>
-                    {console.log(props)}
                     {String(props.cell.value+1)}
                 </Fragment>
                 )
@@ -282,7 +287,6 @@ export default function createTable ({expenses, ...props}) {
                         <RIEInput
                             value={props.cell.value?  props.cell.value : 'Add a comment'}
                             change={(task)=>{
-                                console.log(task)
                                 dispatch(expenses_edit_comment_thunk(id_data, task.comment))
 
                             }}
@@ -297,10 +301,10 @@ export default function createTable ({expenses, ...props}) {
             Header: 'Actions',
             accessor: 'actions',
             Cell: (props)=>{
-                console.log('bbbb', props)
+                // console.log('bbbb id of row', props.row.original.id)
                 const [dropdownOpen, setDropdownOpen] = useState(false);
                 const toggle = () => setDropdownOpen(prevState => !prevState);
-
+                console.log('4444', props)
                 return (
                     <Fragment>
                         <Dropdown isOpen={dropdownOpen} toggle={toggle}>
@@ -312,9 +316,16 @@ export default function createTable ({expenses, ...props}) {
                                 </DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem header>Actions</DropdownItem>
-                                <DropdownItem  onClick={()=>{console.log('aaa')}}>Details</DropdownItem>
+                                <DropdownItem  onClick={()=>{
+                                    setExpenseId(props.row.original.id);  
+                                    setModal(true); 
+                                    setActiveFiles()
+                                    
+                                    }}>Upload the photo of a receipt</DropdownItem>
                                 <DropdownItem divider />
-                                <DropdownItem>Upload the photo of a receipt</DropdownItem>
+                                <DropdownItem onClick = {() => {
+                                history.push(`/${props.row.original.id}`)
+                            }}>Details</DropdownItem>
                             </DropdownMenu>
                             </Dropdown>
                     </Fragment>
@@ -323,11 +334,13 @@ export default function createTable ({expenses, ...props}) {
             }
         },
         ], [])
+
     const data = expenses
 
     return (
         <Fragment>
             <Table columns={columns} data = {data} style={{marginBottom:'50px'}}/>
+            {expenses && <ModalForm expense_id={expense_id} modal={modal} setModal={setModal} expenses={expenses} className="modal-lg" />}
         </Fragment>
     )
 }

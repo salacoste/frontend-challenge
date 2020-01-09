@@ -34,7 +34,6 @@ export const expenses_loaded = createAction(EXPENSES_LOADED)
 export const expenses_error = createAction(EXPENSES_ERROR)
 export const expenses_filter = createAction(EXPENSES_FILTER)
 export const expenses_change_comment = createAction(EXPENSES_CHANGE_COMMENT)
-
 export const expenses_new_image_id_adding = createAction(NEW_EXPENSE_IMAGE_ID_ADDING)
 
 
@@ -74,6 +73,31 @@ export const expenses_edit_comment_thunk = (id, comment)=> {
   }
 }
 
+export const expenses_image_loading_thunk = (id, image, setLoading, toggle)=> {
+  return (dispatch, getState) => {
+    console.log('loading the image..', id, image)
+    let formData = new FormData();
+    formData.append('receipt', image);
+
+    axios.post(`${url}/${id}/receipts`, formData , 
+    {
+      headers: {
+          "Content-type": "multipart/form-data",
+      },                    
+  })
+    .then((res)=> {
+      console.log('resolve', res)
+      setLoading(false)
+      toggle()
+      dispatch(expenses_new_image_id_adding(res.data))
+    })
+    .catch((e)=> {
+      console.log('Error is occured', e)
+      setLoading(false)
+      dispatch(expenses_error(e))
+    })
+  }
+}
 
 // ---
 // INITIAL STATE
@@ -125,7 +149,11 @@ const reducerMap = {
       // return state
     },
     [NEW_EXPENSE_IMAGE_ID_ADDING]: (state, action) => {      
-      return Immutable.setIn(state, ['entities', action.payload.articleId, 'comments'], [...state.entities[action.payload.articleId].comments, action.payload.id])
+      // return Immutable.setIn(state, ['entities', action.payload.articleId, 'comments'], [...state.entities[action.payload.articleId].comments, action.payload.id])
+      console.log(NEW_EXPENSE_IMAGE_ID_ADDING, 'action!')
+      return Immutable.setIn(state, ['entities', action.payload.id, 'receipts'], action.payload.receipts)
+
+      // return {...state}
     },
     [EXPENSES_CHANGE_COMMENT] : (state, action) => {
       console.log('change comment action', action)
