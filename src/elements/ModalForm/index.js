@@ -34,7 +34,6 @@ const ModalForm = (props) => {
 
   return (
     <div>
-      <Button color="danger" onClick={toggle}>{buttonLabel}</Button>
       <Modal isOpen={modal} toggle={toggle} className={className}>
         <ModalHeader toggle={toggle}>Expense files for the {expenseObject.merchant}'s report</ModalHeader>
         <ModalBody>

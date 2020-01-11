@@ -1,0 +1,7 @@
+.table-bordered td, .table-bordered th {
+  vertical-align: middle;
+}
+
+.cursorHover :hover {
+  cursor: pointer;
+}

@@ -114,7 +114,7 @@ const UploadForm = (props) => {
           {receipts.map((r, i)=> {
             return (
               <Fragment>
-                <ListGroupItem>
+                <ListGroupItem key={i}>
                   <a  href={`http://localhost:3000${r.url}`} target="_blank" rel="noopener noreferrer">
                     Receipt {i}
                   </a>

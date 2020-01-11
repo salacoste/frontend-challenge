@@ -20,7 +20,7 @@ class MainLayout extends PureComponent {
     console.log('MainLayout props', this.props)
     return (
       <Wrapper >
-          <ThemeContext.Provider value={{themes, changeTheme: this.changeTheme, ...this.state, '2': 2}}>
+          <ThemeContext.Provider value={{themes, changeTheme: this.changeTheme, ...this.state, }}>
             <NavBarElement/>
           <main>
           { this.props.children }

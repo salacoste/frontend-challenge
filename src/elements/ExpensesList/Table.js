@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useParams, useContext } from 'react'
 import {useTable, useSortBy, usePagination, useFilters, useGlobalFilter} from 'react-table'
 import {Table as TableR, Pagination, PaginationItem, PaginationLink, FormGroup, Label, Input, Col, CustomInput} from 'reactstrap'
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge } from 'reactstrap';
 import {FaQuestionCircle, } from 'react-icons/fa'
 import {FiMoreHorizontal} from 'react-icons/fi'
 import {ThemeContext} from '../../context/Context'
@@ -15,6 +15,7 @@ import {expenses_edit_comment_thunk} from '../../store/reducers/expenses/expense
 
 import ModalForm from '../../elements/ModalForm'
 
+import './Table.css'
 
 
 function Table ({columns, data, pagination}) {
@@ -109,7 +110,7 @@ function Table ({columns, data, pagination}) {
                             return (
                                 <tr {...row.getRowProps()}>
                                     {row.cells.map(cell => {
-                                        if (cell.column.Header !== 'Actions' && cell.column.Header !== 'Comment' ) {
+                                        if (cell.column.Header !== 'Actions' && cell.column.Header !== 'Comment' && cell.column.Header !== 'Uploaded receipts') {
                                             return <td {...cell.getCellProps()}  onClick={onClick} className="pseudoLink" >{cell.render('Cell')}</td>
                                         }
                                         return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -193,7 +194,7 @@ function paginationNav({
         
     }
     return (
-    <Pagination aria-label="Page navigation example" >
+    <Pagination aria-label="Page navigation" >
         <PaginationItem disabled={!canPreviousPage}>
             <PaginationLink first href="#" onClick={(e) => {e.preventDefault(); gotoPage(0)}} />
         </PaginationItem>
@@ -267,7 +268,6 @@ export default function createTable ({expenses, ...props}) {
             accessor: 'amount.currency',
             Cell: (props) => {
                 const {amount} = props.cell.row.original
-                // console.log('2!!2222', amount, props)
                 return (
                     <Fragment>
                         {amount ? <span>{amount.value} {amount.currency}</span>: ''}
@@ -292,6 +292,29 @@ export default function createTable ({expenses, ...props}) {
                             }}
                             propName='comment'
                             validate={_.isString} />
+                    </Fragment>
+
+                )
+            }
+        },
+        {
+            Header: 'Uploaded receipts',
+            accessor: 'receipts',
+            
+            Cell: (props)=>{
+                const receipts_length = props.cell.row.original.receipts.length
+                
+                return (
+                    <Fragment>
+                        <div  className="text-center cursorHover">
+                            <span style={{display:'inline-block', padding: '5px', borderRadius:'30px', minWidth:'30px', fontSize:'16px'}} className="badge-primary"
+                              onClick={()=>{
+                                setExpenseId(props.row.original.id);  
+                                setModal(true); 
+                                setActiveFiles()}}>
+                                {receipts_length}
+                            </span>
+                        </div>
                     </Fragment>
 
                 )
