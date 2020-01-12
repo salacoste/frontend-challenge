@@ -26,7 +26,6 @@ const ModalForm = (props) => {
 
   let expenseObject = {}
   if (expenses.length>0 && expense_id) {
-    console.log('exppp', arrayToObject(expenses)[expense_id]['merchant'])
     expenseObject = arrayToObject(expenses)[expense_id];
 
   }

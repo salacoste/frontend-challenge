@@ -17,7 +17,6 @@ const UploadForm = (props) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
-  console.log('expense modal', expense, receipts.length)
 
   const _handleSubmit = (e)=> {
     e.preventDefault();
@@ -25,7 +24,6 @@ const UploadForm = (props) => {
     // TODO: do something with -> useState
     dispatch(expenses_image_loading_thunk(id, file, setLoading, toggle))
     setLoading(true)
-    // console.log('handle uploading-', file);
   }
 
   const _handleImageChange = (e) => {
@@ -112,14 +110,13 @@ const UploadForm = (props) => {
         <Container>
           <ListGroup>
           {receipts.map((r, i)=> {
+            console.log(r)
             return (
-              <Fragment>
-                <ListGroupItem key={i}>
+                <ListGroupItem key={r.url}>
                   <a  href={`http://localhost:3000${r.url}`} target="_blank" rel="noopener noreferrer">
-                    Receipt {i}
+                    Receipt {i+1}
                   </a>
                 </ListGroupItem>
-              </Fragment>
             )
           })}
           </ListGroup> 

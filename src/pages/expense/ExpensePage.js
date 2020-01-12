@@ -184,6 +184,7 @@ export default function ExpensePage(props) {
         <Col sm="5">
           <Container>
             <RIETextArea 
+              className="font-italic pointer	alert alert-primary" style={{}}
               value={expense.comment?  expense.comment : 'Add a comment'}
               change={(task)=>{
                   dispatch(expenses_edit_comment_thunk(expense.id, task.comment))
@@ -196,7 +197,7 @@ export default function ExpensePage(props) {
               </Row>
 
               {expense.receipts.length ? (
-              <Row className="mt-2">
+              <Row className="mt-4">
                 <Col>
                   <Container>
                     <ListGroup>
@@ -217,7 +218,7 @@ export default function ExpensePage(props) {
               </Row>  
               ) : (
                 <Fragment>
-                <Row className="mt-2">
+                <Row className="mt-4">
                   <Col>
                     <Container>
                       <Alert color="warning">

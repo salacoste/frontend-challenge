@@ -12,3 +12,12 @@
   opacity: 0;
   transition: opacity 500ms;
 }
+
+span.pointer {
+  display: inline-block;
+  padding: 5px;
+}
+
+span.pointer:hover {
+  cursor: pointer;
+}

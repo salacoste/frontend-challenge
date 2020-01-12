@@ -14,7 +14,6 @@ class NavBarElement extends PureComponent {
     return (
       <ThemeContext.Consumer>
       {(props)=> {
-        console.log('ppp', props)
         return (<Fragment>
                     <Navbar bg={props.activeTheme} expand="sm" variant={props.activeTheme}  collapseOnSelect>
                       <Navbar.Brand>Expense report page</Navbar.Brand>

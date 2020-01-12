@@ -100,7 +100,6 @@ function Table ({columns, data, pagination}) {
                         ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {console.log('222222',rows)}
                         {page.map(
                             (row, i) => {
                             prepareRow(row); 
@@ -284,7 +283,7 @@ export default function createTable ({expenses, ...props}) {
                 
                 return (
                     <Fragment>
-                        <RIEInput
+                        <RIEInput className='pointer'
                             value={props.cell.value?  props.cell.value : 'Add a comment'}
                             change={(task)=>{
                                 dispatch(expenses_edit_comment_thunk(id_data, task.comment))
@@ -327,7 +326,6 @@ export default function createTable ({expenses, ...props}) {
                 // console.log('bbbb id of row', props.row.original.id)
                 const [dropdownOpen, setDropdownOpen] = useState(false);
                 const toggle = () => setDropdownOpen(prevState => !prevState);
-                console.log('4444', props)
                 return (
                     <Fragment>
                         <Dropdown isOpen={dropdownOpen} toggle={toggle}>
