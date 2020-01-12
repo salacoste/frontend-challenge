@@ -110,7 +110,6 @@ const UploadForm = (props) => {
         <Container>
           <ListGroup>
           {receipts.map((r, i)=> {
-            console.log(r)
             return (
                 <ListGroupItem key={r.url}>
                   <a  href={`http://localhost:3000${r.url}`} target="_blank" rel="noopener noreferrer">
